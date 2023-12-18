@@ -5,7 +5,7 @@ require(['js/text!header.html',
 function(headerTemplate, footerTemplate, bodyTemplate) {
     const BACKEND_URL = "https://pabla-node.azurewebsites.net/"
     const MESSAGES_LIST_URL = BACKEND_URL + "messages/list"
-    const MESSAGES_ADD_URL = BACKEND_URL + "messages/add"
+    const MESSAGES_ADD_URL = BACKEND_URL + "messages/create"
     let app;
 
     const ApplicationRouter = Backbone.Router.extend({
@@ -59,15 +59,15 @@ function(headerTemplate, footerTemplate, bodyTemplate) {
             "click #send": "saveMessage"
         },
         initialize: function() {
-            // TODO
+            getMessages(this)
         },
         render: function() {
-            messages = getMessages(this)
+            getMessages(this)
         },
         saveMessage: function() {
-            data = {"username": $("#username")[0].value,
+            data = {"name": $("#username")[0].value,
                     "message": $("#message")[0].value}
-            // TODO
+            addMessage(this, data)
         }
     });
 
@@ -77,11 +77,26 @@ function(headerTemplate, footerTemplate, bodyTemplate) {
             method: 'GET',
             dataType: 'json',
             success: (data) => {
-                console.log(data)
                 $(view.el).html(_.template(view.template)({"messages": data}));
+            }
+        })
+    }
+
+    function addMessage(view, data) {
+        console.log("add")
+        const request = $.ajax({
+            url: MESSAGES_ADD_URL,
+            method: 'POST',
+            dataType: 'json',
+            contentType: 'application/json',
+            data: data,
+            success: function() {
+                console.log("refresh")
+                view.render()
             },
-            error: (xhr, status, err) => {
-                console.error(`Jeblo: ${error}`)
+            error: function(_, msg) {
+                console.log(`Failed... ${msg}`)
+                view.render()
             }
         })
     }
