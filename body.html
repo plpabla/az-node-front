@@ -1,0 +1,32 @@
+<form id="new-user">
+    <input type="text" id = "username" name="username" placeholder="username">
+    <input type="text" id="message" name="message" placeholder="message">
+    <a id="send" class="btn btn-primary">Send</a>
+</form>
+
+<table class="table table-bordered table-striped">
+<caption>Messages</caption>
+<thead>
+    <tr>
+        <th>User</th>
+        <th>Message</th>
+    </tr>
+</thead>
+<tbody>
+
+    <%  if (typeof messages != 'undefined' && messages.length > 0) {
+        _.each(messages, function (value, key, list) { %>
+            <tr>
+                <td><%= value.attributes.username %></td>
+                <td><%= value.attributes.message %></td>
+            </tr>
+
+    <% });
+         } else { %> 
+    <tr>
+        <td colspan="2"><img src="media/spinner.gif" alt="loading" width="30px" class="rounded mx-auto d-block"></td>
+    </tr>
+    <% } %>
+
+</tbody>
+</table>
