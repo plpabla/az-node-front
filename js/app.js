@@ -3,6 +3,9 @@ require(['js/text!header.html',
          'js/text!body.html'
 ], 
 function(headerTemplate, footerTemplate, bodyTemplate) {
+    const BACKEND_URL = "https://pabla-node.azurewebsites.net/"
+    const MESSAGES_LIST_URL = BACKEND_URL + "messages/list"
+    const MESSAGES_ADD_URL = BACKEND_URL + "messages/add"
     let app;
 
     const ApplicationRouter = Backbone.Router.extend({
@@ -52,7 +55,6 @@ function(headerTemplate, footerTemplate, bodyTemplate) {
     const HomeView = Backbone.View.extend({
         el: "#body",
         template: bodyTemplate,
-        query: undefined,
         events: {
             "click #send": "saveMessage"
         },
@@ -60,9 +62,7 @@ function(headerTemplate, footerTemplate, bodyTemplate) {
             // TODO
         },
         render: function() {
-            messages = undefined
-            $(this.el).html(_.template(this.template)({"messages": res}));
-
+            messages = getMessages(this)
         },
         saveMessage: function() {
             data = {"username": $("#username")[0].value,
@@ -71,12 +71,25 @@ function(headerTemplate, footerTemplate, bodyTemplate) {
         }
     });
 
+    function getMessages(view) {
+        const request = $.ajax({
+            url: MESSAGES_LIST_URL,
+            method: 'GET',
+            dataType: 'json',
+            success: (data) => {
+                console.log(data)
+                $(view.el).html(_.template(view.template)({"messages": data}));
+            },
+            error: (xhr, status, err) => {
+                console.error(`Jeblo: ${error}`)
+            }
+        })
+    }
+
     $(document).ready(function() {
         app = new ApplicationRouter();
         Backbone.history.start();
     }) /* document.ready() */
-    
-
 }) /* require */
 
 

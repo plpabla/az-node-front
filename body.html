@@ -15,10 +15,10 @@
 <tbody>
 
     <%  if (typeof messages != 'undefined' && messages.length > 0) {
-        _.each(messages, function (value, key, list) { %>
+        _.each(messages, function (row, key, list) { %>
             <tr>
-                <td><%= value.attributes.username %></td>
-                <td><%= value.attributes.message %></td>
+                <td><%= row.name %></td>
+                <td><%= row.message %></td>
             </tr>
 
     <% });
