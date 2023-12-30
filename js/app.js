@@ -72,6 +72,8 @@ function(headerTemplate, footerTemplate, bodyTemplate) {
     });
 
     function getMessages(view) {
+        // First display spinner
+        $(view.el).html(_.template(view.template)({"messages": undefined}));
         const request = $.ajax({
             url: MESSAGES_LIST_URL,
             method: 'GET',
